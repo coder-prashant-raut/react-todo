@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react'
 
 function Todo() {
 
+  //All states Are Here 
   const [inputValue, setInputValue] = useState('')
   const [todos, setTodos] = useState(()=>{
-    const savedTodos = localStorage.getItem('todos');
+  const savedTodos = localStorage.getItem('todos');
     return savedTodos ? JSON.parse(savedTodos) : []; // Default empty array
-  })
+  });
+  const [date, setDate] = useState('')
+
+
 
   useEffect(() => {
     localStorage.setItem('todos', JSON.stringify(todos));
@@ -40,38 +44,68 @@ function Todo() {
 }
 
 
-const handledelete = (id) =>{
+const handledelete = (todo) =>{
   // 
-  console.log(id.target );
-   
+  console.log(todos);
   
+  console.log(todo);
+
+
+const updatedTodo = todos.filter((cur) => cur !== todo); // Explicitly return true for items to keep
+
+console.log(updatedTodo);
+
+  setTodos(updatedTodo); 
+
+
 }
-console.log(todos);
+
+
+setInterval(() => {
+  
+// consol''e.log(todos);
 const now = new Date();
+const time = now.toLocaleTimeString();
+const date = now.toLocaleDateString() ;
+const DT = `${date} - ${time}`
 
-const date = now.toLocaleDateString();
+setDate(DT)
+}, 1000);
 
 
+
+
+const deleteAllTodo = () => {
+
+  console.log('delee');
+  
+  setTodos([])
+}
   return (
     <div className='bg-gray-900 h-screen'>
         <h1 className='shadow flex justify-center p-2 text-4xl font-bold text-red-500'>
-            Todo {date}
+            Todo 
         </h1>
 
         <div className='flex justify-center p-4 gap-3.5'> 
         <input type="text" value={inputValue} onChange={handleInput} className="border border-amber-300 text-white p-2 px-3 rounded-2xl outline-blue-500"/> <button className=' cursor-pointer bg-red-500 hover:bg-red-400 px-4 py-2 rounded-3xl' onClick={addTodoHandlel}>Add</button>
         </div>
- {todos.map((todos, key) =>
+        <h1 className='text-red-300 flex justify-center'>
+        {date}
+        </h1>
+ {todos.map((todo, key) =>
    (      
 <div key={key} className='flex justify-center mt-3 items-center  '>
-<h1 className='flex justify-center items-center bg-amber-200 w-[300px]  p-2 rounded-2xl'>{todos}</h1>
+<h1 className='flex justify-center items-center bg-amber-200 w-[300px]  p-2 rounded-2xl'>{todo}</h1>
 <button 
-onClick={handledelete}
+onClick={()=>{handledelete(todo)}}
 >❌</button>
 <button>➡️</button>
     
 </div> )
  )}     
+
+ <button onClick={deleteAllTodo}>Clear All</button>
 
     </div>
   )
